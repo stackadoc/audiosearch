@@ -1,5 +1,5 @@
-# audiosearch
-Silence ! Let’s the (binary) music begin
+# audiosearch, by Stackadoc
+Silence ! Let's the (binary) music begin
 
 ## Technical music sheet
 
@@ -31,8 +31,6 @@ docker run -p 6333:6333 -p 6334:6334 \
 qdrant/qdrant 
 ```
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3434ae56-1098-48c5-b711-67d792f2cca5/5d6eb0c3-d64c-4ac6-9de0-265aa625eaef/Untitled.png)
-
 *NOTE: If you are running on Windows, kindly replace $(pwd) with your local path.*
 
 # The Python code
@@ -60,8 +58,6 @@ For this project I’ve used the https://www.kaggle.com/competitions/park-spring
 5. After downloading, you may need to unzip or extract the contents of the downloaded file for further processing
 6. Copy and store the folder of training, where every genre subfolders are displayed :
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3434ae56-1098-48c5-b711-67d792f2cca5/bb1fdbbd-2b10-42e7-92a9-5f920fc005a5/Untitled.png)
-
 ```bash
 # For me, it gives the following :
 KAGGLE_DB_PATH = '/home/arthur/data/kaggle/park-spring-2023-music-genre-recognition/train/train'
@@ -71,8 +67,6 @@ KAGGLE_DB_PATH = '/home/arthur/data/kaggle/park-spring-2023-music-genre-recognit
 
 Simply modify the parameters for your CACHE_FOLDER and KAGGLE_DB_PATH, in the [database.py](http://database.py) folder
 
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3434ae56-1098-48c5-b711-67d792f2cca5/e92eb37d-1719-4131-a29b-132729ca8595/Untitled.png)
-
 ## Simply launch the Gradio app and enjoy !
 
 Here’s the simple code : 
@@ -80,7 +74,5 @@ Here’s the simple code :
 ```bash
 python app.py
 ```
-
-![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/3434ae56-1098-48c5-b711-67d792f2cca5/944ff728-17f1-4a91-a36e-de076ea4eb97/Untitled.png)
 
 Go on your favorite webbrowser and open the local URL displayed in your execution stack (for me, Gradio opens at : http://127.0.0.1:7861/ )
