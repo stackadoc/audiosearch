@@ -12,15 +12,16 @@ from tqdm import tqdm
 from transformers import ClapModel, ClapProcessor
 
 # PARAMETERS #######################################################################################
-CACHE_FOLDER = '/home/arthur/data/music/demo_audio_search/audio_embeddings_cache_individual/'
-KAGGLE_DB_PATH = '/home/arthur/data/kaggle/park-spring-2023-music-genre-recognition/train/train'
-
+CACHE_FOLDER = '/home/arthur/data/caches/demo_kaggle_music_recognition/'
+KAGGLE_DB_PATH = '/home/arthur/data/demos/park-spring-2023-music-genre-recognition/'
+COLLECTION_NAME = 'demo_db'
 
 # Functions utils ##################################################################################
 def get_md5(fpath):
     with open(fpath, "rb") as f:
         file_hash = hashlib.md5()
         while chunk := f.read(8192):
+
             file_hash.update(chunk)
     return file_hash.hexdigest()
 
@@ -59,9 +60,9 @@ client = QdrantClient("localhost", port=6333)
 print("[INFO] Client created...")
 
 print("[INFO] Creating qdrant data collection...")
-if not client.collection_exists("demo_db"):
+if not client.collection_exists(COLLECTION_NAME):
     client.create_collection(
-        collection_name="demo_db",
+        collection_name=COLLECTION_NAME,
         vectors_config=models.VectorParams(
             size=model.config.projection_dim,
             distance=models.Distance.COSINE
@@ -69,15 +70,15 @@ if not client.collection_exists("demo_db"):
     )
 
 # Embed the audio files !
-audio_files = [p for p in glob(os.path.join(KAGGLE_DB_PATH, '*/*.wav'))]
+audio_files = [p for p in glob(os.path.join(KAGGLE_DB_PATH, '**/*.wav'), recursive=True)]
 chunk_size, idx = 1, 0
 total_chunks = int(len(audio_files) / chunk_size)
 
 # Use tqdm for a progress bar
-for i in tqdm(range(0, len(audio_files), chunk_size), total=total_chunks):
+for i in tqdm(range(0, len(audio_files), chunk_size), total=len(audio_files),
+              desc="[INFO] Uploading data records to data collection..."):
     chunk = audio_files[i:i + chunk_size]  # Get a chunk of audio files
     records = []
-    print("[INFO] Uploading data records to data collection...")
     for audio_file in chunk:
         embedding = get_audio_embedding(model, audio_file, cache)
         records.append(
@@ -89,9 +90,8 @@ for i in tqdm(range(0, len(audio_files), chunk_size), total=total_chunks):
             )
         )
         idx += 1
-    print(f'Uploading batch starting at idx {i}')
     client.upload_points(
-        collection_name="synthia_db",
+        collection_name=COLLECTION_NAME,
         points=records
     )
 print("[INFO] Successfully uploaded data records to data collection!")

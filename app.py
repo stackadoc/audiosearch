@@ -1,6 +1,9 @@
 import gradio as gr
 from qdrant_client import QdrantClient
 from transformers import ClapModel, ClapProcessor
+# PARAMETERS #######################################################################################
+COLLECTION_NAME='demo_db'
+
 
 # Loading the Qdrant DB in local ###################################################################
 client = QdrantClient("localhost", port=6333)
@@ -21,7 +24,7 @@ def sound_search(query):
     text_embed = model.get_text_features(**text_inputs)[0]
 
     hits = client.search(
-        collection_name="demo_db",
+        collection_name=COLLECTION_NAME,
         query_vector=text_embed,
         limit=max_results,
     )
@@ -35,7 +38,7 @@ def sound_search(query):
 
 with gr.Blocks() as demo:
     gr.Markdown(
-        """# Sound search database """
+        f"""# Sound search database - {COLLECTION_NAME}"""
     )
     inp = gr.Textbox(placeholder="What sound are you looking for ?")
     out = [gr.Audio(label=f"{x}") for x in range(max_results)]  # Necessary to have different objs
